@@ -1,27 +1,33 @@
-import { useState } from 'react';
-import { connect } from 'react-redux';
-import { contactsOperations } from '../../redux/contacts';
-import PropTypes from 'prop-types';
+import { useDispatch } from "react-redux";
+import { useState, useCallback } from "react";
+import { contactsOperations } from "../../redux/contacts";
 
 const initialState = {
-  name: '',
-  number: '',
+  name: "",
+  number: "",
 };
 
-const ContactForm = ({ onSubmit }) => {
+const ContactForm = () => {
   const [inputValue, setInputValue] = useState(initialState);
   const { name, number } = inputValue;
+  const dispatch = useDispatch();
 
-  const changeInput = e => {
-    const { name, value } = e.currentTarget;
-    setInputValue({ ...inputValue, [name]: value });
-  };
+  const changeInput = useCallback(
+    (e) => {
+      const { name, value } = e.currentTarget;
+      setInputValue({ ...inputValue, [name]: value });
+    },
+    [inputValue]
+  );
 
-  const handleSubmit = e => {
-    e.preventDefault();
-    onSubmit(name, number);
-    setInputValue(initialState);
-  };
+  const handleSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
+      dispatch(contactsOperations.addContact(name, number));
+      setInputValue(initialState);
+    },
+    [dispatch, name, number]
+  );
 
   return (
     <form className="form" onSubmit={handleSubmit}>
@@ -56,13 +62,4 @@ const ContactForm = ({ onSubmit }) => {
   );
 };
 
-ContactForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-};
-
-const mapDispatchToProps = dispatch => ({
-  onSubmit: (name, number) =>
-    dispatch(contactsOperations.addContact(name, number)),
-});
-
-export default connect(null, mapDispatchToProps)(ContactForm);
+export default ContactForm;

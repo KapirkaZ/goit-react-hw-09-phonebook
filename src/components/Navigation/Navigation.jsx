@@ -1,9 +1,11 @@
-import { connect } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import routes from '../../routes';
-import { authSelectors } from '../../redux/auth';
+import { useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
+import routes from "../../routes";
+import { authSelectors } from "../../redux/auth";
 
-const Navigation = ({ isAuthenticated }) => {
+const Navigation = () => {
+  const isAuthenticated = useSelector(authSelectors.getIsAuthenticated);
+
   return (
     <nav>
       <NavLink
@@ -27,8 +29,4 @@ const Navigation = ({ isAuthenticated }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  isAuthenticated: authSelectors.getIsAuthenticated(state),
-});
-
-export default connect(mapStateToProps)(Navigation);
+export default Navigation;
