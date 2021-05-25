@@ -5,6 +5,7 @@ import authActions from "./auth-actions";
 const {
   registerSuccess,
   registerError,
+  registerRequest,
   loginSuccess,
   loginError,
   logoutSuccess,
@@ -33,6 +34,7 @@ const setError = (_, { payload }) => payload;
 
 const error = createReducer(null, {
   [registerError]: setError,
+  [registerRequest]: () => null,
   [loginError]: setError,
   [loginRequest]: () => null,
   [logoutError]: setError,
