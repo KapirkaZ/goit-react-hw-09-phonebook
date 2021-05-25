@@ -2,50 +2,51 @@ import { combineReducers } from "redux";
 import { createReducer } from "@reduxjs/toolkit";
 import authActions from "./auth-actions";
 
-const user = createReducer(
-  {},
-  {
-    [authActions.registerSuccess]: (_, { payload }) => payload.user,
-    [authActions.loginSuccess]: (_, { payload }) => payload.user,
-    [authActions.logoutSuccess]: () => null,
-    [authActions.getCurrentUserSuccess]: (_, { payload }) => payload,
-  }
-);
+const {
+  registerSuccess,
+  registerError,
+  loginSuccess,
+  loginError,
+  logoutSuccess,
+  logoutError,
+  getCurrentUserSuccess,
+  getCurrentUserError,
+  loginRequest,
+} = authActions;
+
+const initialUserState = { name: null, email: null };
+
+const user = createReducer(initialUserState, {
+  [registerSuccess]: (_, { payload }) => payload.user,
+  [loginSuccess]: (_, { payload }) => payload.user,
+  [logoutSuccess]: () => initialUserState,
+  [getCurrentUserSuccess]: (_, { payload }) => payload,
+});
 
 const token = createReducer(null, {
-  [authActions.registerSuccess]: (_, { payload }) => payload.token,
-  [authActions.loginSuccess]: (_, { payload }) => payload.token,
-  [authActions.logoutSuccess]: () => null,
+  [registerSuccess]: (_, { payload }) => payload.token,
+  [loginSuccess]: (_, { payload }) => payload.token,
+  [logoutSuccess]: () => null,
 });
 
 const setError = (_, { payload }) => payload;
-const clearError = () => null;
 
 const error = createReducer(null, {
-  [authActions.registerError]: setError,
-  [authActions.loginError]: setError,
-  [authActions.logoutError]: setError,
-  [authActions.getCurrentUserError]: setError,
-  [authActions.registerError]: clearError,
-  [authActions.loginError]: clearError,
-  [authActions.logoutError]: clearError,
-  [authActions.getCurrentUserError]: clearError,
+  [registerError]: setError,
+  [loginError]: setError,
+  [loginRequest]: () => null,
+  [logoutError]: setError,
+  [getCurrentUserError]: setError,
 });
 
-const isAuthenticated = createReducer(false, {
-  [authActions.registerSuccess]: () => true,
-  [authActions.loginSuccess]: () => true,
-  [authActions.getCurrentUserSuccess]: () => true,
-  [authActions.registerError]: () => false,
-  [authActions.loginError]: () => false,
-  [authActions.getCurrentUserError]: () => false,
-  [authActions.logoutSuccess]: () => false,
+const isLoggedIn = createReducer(false, {
+  [registerSuccess]: () => true,
+  [loginSuccess]: () => true,
+  [getCurrentUserSuccess]: () => true,
+  [registerError]: () => false,
+  [loginError]: () => false,
+  [getCurrentUserError]: () => false,
+  [logoutSuccess]: () => false,
 });
 
-//eslint-disable-next-line
-export default combineReducers({
-  user,
-  isAuthenticated,
-  token,
-  error,
-});
+export default combineReducers({ user, isLoggedIn, token, error });
