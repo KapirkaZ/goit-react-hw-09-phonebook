@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { connect } from "react-redux";
+import { useDispatch } from "react-redux";
 import { authOperations } from "../redux/auth";
 
 const initialState = {
@@ -8,9 +8,10 @@ const initialState = {
   password: "",
 };
 
-const RegisterPage = ({ onRegister }) => {
+const RegisterPage = () => {
   const [state, setState] = useState(initialState);
   const { name, email, password } = state;
+  const dispatch = useDispatch();
 
   const handleChange = ({ target: { name, value } }) => {
     setState({ ...state, [name]: value });
@@ -18,7 +19,7 @@ const RegisterPage = ({ onRegister }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onRegister(state);
+    dispatch(authOperations.register(state));
     setState(initialState);
   };
   return (
@@ -64,8 +65,4 @@ const RegisterPage = ({ onRegister }) => {
   );
 };
 
-const mapDispatchToProps = {
-  onRegister: authOperations.register,
-};
-
-export default connect(null, mapDispatchToProps)(RegisterPage);
+export default RegisterPage;

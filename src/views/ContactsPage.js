@@ -1,15 +1,17 @@
-import Container from '../components/Container';
-import ContactForm from '../components/ContactForm';
-import ContactList from '../components/ContactList';
-import Filter from '../components/Filter';
-import Spinner from '../components/Loader';
-import { connect } from 'react-redux';
-import { useEffect } from 'react';
-import { contactsOperations, contactsSelectors } from '../redux/contacts';
+import Container from "../components/Container";
+import ContactForm from "../components/ContactForm";
+import ContactList from "../components/ContactList";
+import Filter from "../components/Filter";
+import Spinner from "../components/Loader";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { contactsOperations, contactsSelectors } from "../redux/contacts";
 
-const App = ({ isLoading, isError, fetchContacts }) => {
-  // eslint-disable-next-line
-  useEffect(() => fetchContacts(), []);
+const ContactsPage = () => {
+  const dispatch = useDispatch();
+  const isLoading = useSelector(contactsSelectors.getLoading);
+  const isError = useSelector(contactsSelectors.getError);
+  useEffect(() => dispatch(contactsOperations.fetchContacts()), [dispatch]);
 
   return (
     <Container>
@@ -28,13 +30,4 @@ const App = ({ isLoading, isError, fetchContacts }) => {
   );
 };
 
-const mapStateToProps = state => ({
-  isLoading: contactsSelectors.getLoading(state),
-  isError: contactsSelectors.getError(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-  fetchContacts: () => dispatch(contactsOperations.fetchContacts()),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default ContactsPage;
