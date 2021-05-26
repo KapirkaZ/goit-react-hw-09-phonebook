@@ -50,16 +50,10 @@ const loading = createReducer(false, {
 //   [fetchContactError]: () => true,
 // });
 
-const error = createReducer(false, {
-  [addContactRequest]: () => false,
-  [addContactSuccess]: () => false,
-  [addContactError]: () => true,
-  [deleteContactRequest]: () => false,
-  [deleteContactSuccess]: () => false,
-  [deleteContactError]: () => true,
-  [fetchContactRequest]: () => false,
-  [fetchContactSuccess]: () => false,
-  [fetchContactError]: () => true,
+const error = createReducer(null, {
+  [addContactError]: (_, { payload }) => payload,
+  [deleteContactError]: (_, { payload }) => payload,
+  [fetchContactError]: (_, { payload }) => payload,
 });
 
 export default combineReducers({ items, filter, loading, error });
